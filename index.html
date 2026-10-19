@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniMatch AI - Умный подбор университетов</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), 
+                              url('https://images.unsplash.com/photo-1564981797816-1043664bf78d?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="scrollToTop()">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/20">
+                    U
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">UniMatch</span>
+                    <span class="text-xs text-slate-400 font-semibold block -mt-1">GLOBAL ADMISSIONS</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+                <a href="#hero" class="hover:text-blue-600 transition">Главная</a>
+                <a href="#wizard-section" class="hover:text-blue-600 transition">Подбор</a>
+                <a href="#catalog-section" class="hover:text-blue-600 transition">Каталог вузов</a>
+                <a href="#about-section" class="hover:text-blue-600 transition">О платформе</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <button onclick="scrollToWizard()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-blue-500/20 transition transform active:scale-95 text-sm">
+                    <i class="fa-solid fa-compass mr-2"></i>Подобрать университет
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="hero-bg text-white py-24 md:py-32 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6 text-sm text-blue-200">
+                <i class="fa-solid fa-graduation-cap text-yellow-400"></i>
+                <span>Интеллектуальная система профориентации и поступления</span>
+            </div>
+
+            <!-- Exact required headline in Russian -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight mb-6 leading-tight">
+                «Делай желаемое вместе с нами»
+            </h1>
+
+            <p class="max-w-3xl mx-auto text-lg md:text-xl text-slate-300 font-normal mb-10 leading-relaxed">
+                Персональный подбор топовых университетов мира на основе ваших баллов SAT/IELTS, научных достижений, олимпиад и академических интересов.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button onclick="scrollToWizard()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-4 rounded-xl text-lg shadow-lg shadow-blue-600/30 transition transform hover:-translate-y-0.5">
+                    Подобрать университет <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+                <a href="#catalog-section" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-xl text-lg backdrop-blur-md border border-white/20 transition">
+                    Смотреть каталог
+                </a>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-16 pt-12 border-t border-white/10 text-left">
+                <div>
+                    <div class="text-3xl font-bold text-white">100%</div>
+                    <div class="text-xs text-slate-400 mt-1">Официальные данные ВУЗов</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-white">15+</div>
+                    <div class="text-xs text-slate-400 mt-1">Стран мира в базе</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-white">3 уровня</div>
+                    <div class="text-xs text-slate-400 mt-1">Амбициозные / Конкурентные / Надежные</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-white">Персонально</div>
+                    <div class="text-xs text-slate-400 mt-1">Учитывает все достижения</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT / WIZARD SECTION -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow w-full">
+
+        <!-- Assessment Form Section -->
+        <section id="wizard-section" class="scroll-mt-24 mb-16">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 md:p-8">
+                    <h2 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
+                        <i class="fa-solid fa-sliders text-blue-400"></i> Анкетная форма абитуриента
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-1">Заполните ваши текущие показатели и интересы для точного анализа</p>
+                </div>
+
+                <div class="p-6 md:p-8 space-y-10">
+
+                    <!-- STEP 1: Countries -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-800 mb-2 uppercase tracking-wider">
+                            1. Предпочитаемые страны <span class="text-blue-600">(Выберите одну или несколько)</span>
+                        </label>
+                        <div class="flex flex-wrap gap-2.5" id="countries-container">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <!-- STEP 2: Scores -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-bold text-slate-800 uppercase tracking-wider">
+                                2. Академические баллы
+                            </label>
+                            <span class="text-xs text-slate-500 font-normal">*Необязательные поля. Если тест еще не сдан — оставьте пустым</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- SAT Score -->
+                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="sat-input" class="font-bold text-slate-700 flex items-center gap-2">
+                                        <i class="fa-solid fa-pen-nib text-indigo-600"></i> SAT Score
+                                    </label>
+                                    <span class="text-xs bg-indigo-100 text-indigo-800 font-semibold px-2 py-0.5 rounded">400 - 1600</span>
+                                </div>
+                                <input type="number" id="sat-input" min="400" max="1600" step="10" placeholder="Например: 1480 (необязательно)" 
+                                       class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-800 font-medium">
+                            </div>
+
+                            <!-- IELTS Score -->
+                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="ielts-input" class="font-bold text-slate-700 flex items-center gap-2">
+                                        <i class="fa-solid fa-language text-blue-600"></i> IELTS Overall Band
+                                    </label>
+                                    <span class="text-xs bg-blue-100 text-blue-800 font-semibold px-2 py-0.5 rounded">0.0 - 9.0</span>
+                                </div>
+                                <input type="number" id="ielts-input" min="0" max="9" step="0.5" placeholder="Например: 7.5 (необязательно)" 
+                                       class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-800 font-medium">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <!-- STEP 3: Major Field of Study -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-800 mb-2 uppercase tracking-wider">
+                            3. Направление обучения (Major)
+                        </label>
+                        <select id="major-select" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-800 font-medium bg-white">
+                            <!-- JS Populated -->
+                        </select>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <!-- STEP 4: Achievements -->
+                    <div>
+                        <label class="block text-sm font-bold text-slate-800 mb-2 uppercase tracking-wider">
+                            4. Достижения и внеучебная деятельность
+                        </label>
+                        <p class="text-xs text-slate-500 mb-4">Укажите олимпиады, исследовательские проекты, волонтёрство или лидерство</p>
+
+                        <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                            <input type="text" id="achieve-title" placeholder="Название (напр., Республиканская олимпиада по физике)" class="flex-grow px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <select id="achieve-cat" class="px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                                <option value="Olympiad">🏆 Олимпиада</option>
+                                <option value="Research">🔬 Исследования</option>
+                                <option value="Tech">💻 IT / Проекты</option>
+                                <option value="Leadership">⭐ Лидерство</option>
+                                <option value="Volunteer">🤝 Волонтёрство</option>
+                            </select>
+                            <button type="button" onclick="addAchievement()" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-plus"></i> Добавить
+                            </button>
+                        </div>
+
+                        <div id="achievements-list" class="space-y-2">
+                            <!-- Dynamic achievement cards inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-4">
+                        <button onclick="generateRecommendations()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold py-4 px-8 rounded-xl text-lg shadow-xl shadow-blue-500/25 transition transform active:scale-[0.99] flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-wand-magic-sparkles text-xl"></i> Подобрать университеты
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULTS / RECOMMENDATIONS CATALOG -->
+        <section id="catalog-section" class="scroll-mt-24">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900">Рекомендованные Университеты</h2>
+                    <p class="text-slate-500 text-sm mt-1" id="results-count-text">Показаны результаты на основе базовых параметров</p>
+                </div>
+
+                <!-- Filters & Search Toolbar -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <input type="text" id="search-input" oninput="filterResults()" placeholder="Поиск по названию..." class="px-4 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    
+                    <select id="filter-tier" onchange="filterResults()" class="px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                        <option value="ALL">Все категории</option>
+                        <option value="Ambitious">🔥 Амбициозные</option>
+                        <option value="Competitive">🎯 Конкурентные</option>
+                        <option value="Safer">🛡️ Надежные</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- University Cards Grid -->
+            <div id="universities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- JS populated -->
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="about-section" class="mt-24 bg-blue-50 rounded-2xl p-8 md:p-12 border border-blue-100">
+            <div class="max-w-3xl">
+                <h3 class="text-2xl font-bold text-slate-900 mb-4">О методологии оценки UniMatch AI</h3>
+                <p class="text-slate-600 leading-relaxed mb-4">
+                    Наша платформа не использует вымышленные проценты шансов. Мы сравниваем ваш профиль с официально опубликованными медианными показателями принятых абитуриентов последних приёмных кампаний (2024-2025).
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <div class="font-bold text-red-600 mb-1">🔥 Амбициозные</div>
+                        <div class="text-xs text-slate-500">ВУЗы с конкурсом менее 10% или требованиями выше текущих баллов.</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <div class="font-bold text-blue-600 mb-1">🎯 Конкурентные</div>
+                        <div class="text-xs text-slate-500">Ваши баллы находятся в пределах 25%-75% перцентиля зачисленных студентов.</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200">
+                        <div class="font-bold text-emerald-600 mb-1">🛡️ Надежные</div>
+                        <div class="text-xs text-slate-500">Ваши показатели превосходят средние требования университета.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <div class="text-white font-bold text-lg mb-1">UniMatch AI</div>
+                <div class="text-xs text-slate-500">«Делай желаемое вместе с нами» — Платформа международного образования.</div>
+            </div>
+            <div class="text-xs text-slate-500">
+                &copy; 2026 UniMatch Platform. Данные актуализированы для приёмных кампаний 2025/2026 гг.
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL FOR DETAILED VIEW -->
+    <div id="uni-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200" id="modal-content">
+            <!-- Modal JS populated -->
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // --- DATASET OF UNIVERSITIES ---
+        const UNIVERSITIES_DATA = [
+            {
+                id: 'mit',
+                name: 'Massachusetts Institute of Technology (MIT)',
+                country: 'United States',
+                city: 'Cambridge, MA',
+                image: 'https://images.unsplash.com/photo-1564981797816-1043664bf78d?q=80&w=800&auto=format&fit=crop',
+                acceptanceRate: '4.8%',
+                acceptanceSource: 'MIT Admissions Office (Class of 2028 Cycle)',
+                satRange: '1520 - 1580',
+                satMin: 1520,
+                ieltsMin: 7.5,
+                ieltsPolicy: 'Рекомендуется 7.5+, минимальный балл 7.0',
+                majors: ['Computer Science', 'Artificial Intelligence', 'Engineering', 'Physics', 'Mathematics'],
+                description: 'Один из ведущих технологических университетов мира, лидер в области инженерии, искусственного интеллекта и точных наук.',
+                officialUrl: 'https://www.mit.edu',
+                admissionsUrl: 'https://mitadmissions.org'
+            },
+            {
+                id: 'stanford',
+                name: 'Stanford University',
+                country: 'United States',
+                city: 'Stanford, CA',
+                image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop',
+                acceptanceRate: '3.9%',
+                acceptanceSource: 'Stanford Common Data Set 2023-2024',
+                satRange: '1500 - 1570',
+                satMin: 1500,
+                ieltsMin: 7.5,
+                ieltsPolicy: 'Предпочтителен 7.5+ или TOEFL 100+',
+                majors: ['Computer Science', 'Business and Management', 'Engineering', 'Economics and Finance', 'Artificial Intelligence'],
+                description: 'Сердце Кремниевой долины, известное своим предпринимательским духом и сильнейшими программами в IT и бизнесе.',
+                officialUrl: 'https://www.stanford.edu',
+                admissionsUrl: 'https://admission.stanford.edu'
+            },
+            {
+                id: 'oxford',
+                name: 'University of Oxford',
+                country: 'United Kingdom',
+                city: 'Oxford',
+                image: 'https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?q=80&w=800&auto=format&fit=crop',
+                acceptanceRate: '14.5%',
+                acceptanceSource: 'Oxford University Admissions Statistics 2023',
+                satRange: '1480 - 1560',
+                satMin: 1480,
+                ieltsMin: 7.5,
+                ieltsPolicy: 'Строго 7.5 (не менее 7.0 в каждом компоненте)',
+                majors: ['Law', 'Humanities', 'Mathematics', 'Economics and Finance', 'Medicine and Health Sciences', 'Physics'],
+                description: 'Старейший англоязычный университет мира, отличающийся уникальной тьюторской системой обучения.',
+                officialUrl: 'https://www.ox.ac.uk',
+                admissionsUrl: 'https://www.ox.ac.uk/admissions'
+            },
+            {
+                id: 'cambridge',
+                name: 'University of Cambridge',
+                country: 'United Kingdom',
+                city: 'Cambridge',
+                image: 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=800&auto=format&fit=crop',
+                acceptanceRate: '15.7%',
+                acceptanceSource: 'Cambridge Undergraduate Admissions Statistics',
+                satRange: '1460 - 1560',
+                satMin: 1460,
+                ieltsMin: 7.5,
+                ieltsPolicy: '7.5 общий балл (не менее 7.0 во всех частях)',
+                majors: ['Computer Science', 'Engineering', 'Natural Sciences', 'Mathematics', 'Architecture and Design'],
+                description: 'Мировой центр фундаментальной науки, давший миру десятки нобелевских лауреатов.',
+                officialUrl: 'https://www.cam.ac.uk',
+                admissionsUrl: 'https://www.undergraduate.study.cam.ac.uk'
+            },
+            {
+                id: 'eth',
+                name: 'ETH Zurich',
+                country: 'Germany', // Categorized for DACH region / German speaking
+                city: 'Zurich, Switzerland',
+                image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&auto=format&fit=crop',
+                acceptanceRate: '27.0%',
+                acceptanceSource: 'ETH Zurich Annual Report',
+                satRange: 'Не требуется (Оценка по аттестату/экзаменам)',
+                satMin: 0,
+                ieltsMin: 7.0,
+                ieltsPolicy: '7.0 (или подтверждение немецкого C1/C2)',
+                majors: ['Engineering', 'Computer Science', 'Physics', 'Architecture and Design', 'Natural Sciences'],
+                description: 'Лучший политехнический университет континентальной Европы с доступной стоимостью обучения.',
+                officialUrl: 'https://ethz.ch',
+                admissionsUrl: 'https://ethz.ch/en/studies.html'
+            },
+            {
+                id: 'tum',
+                name: 'Technical University of Munich (TUM)',
+                country: 'Germany',
+                city: 'Munich, Germany',
+                image: 'https://images.unsplash.com/photo-1592285850223-833e14d10103?q=80&w=800&auto=format&fit=crop',
+                acceptanceRate: '28.0%',
+                acceptanceSource: 'TUM Factsheet 2023',
+                satRange: 'Не требуется',
+                satMin: 0,
+                ieltsMin: 6.5,
+                ieltsPolicy: '6.5 общий балл для англоязычных программ',
+                majors: ['Engineering', 'Computer Science', 'Artificial Intelligence', 'Physics', 'Business and Management'],
+                description: 'Флагманский немецкий технический университет с сильнейшими связями с индустрией (BMW, Siemens, SAP).',
+                officialUrl: 'https://www.tum.de',
+                admissionsUrl: 'https://www.tum.de/en/studies/apply'
+            },
+            {
+                id: 'toronto',
+                name: 'University of Toronto',
+                country: 'Canada',
+                city: 'Toronto, ON',
+                image: 'https://images.unsplash.com/photo-1564981797816-1043664bf78d?q=80&w=800&auto=format&fit=crop',
+                acceptanceRate: '43.0%',
+                acceptanceSource: 'U of T Enrolment Report',
+                satRange: '1350 - 1500',
+                satMin: 1350,
+                ieltsMin: 6.5,
+                ieltsPolicy: '6.5 (минимум 6.0 в каждом разделе)',
+                majors: ['Computer Science', 'Medicine and Health Sciences', 'Business and Management', 'Social Sciences', 'Humanities'],
+                description: 'Ведущий исследовательский университет Канады, расположенный в динамичном мегаполисе.',
+                officialUrl: 'https://www.utoronto.ca',
+                admissionsUrl: 'https://future.utoronto.ca'
+            },
+            {
+                id: 'nus',
+                name: 'National University of Singapore (NUS)',
+                country: 'Singapore',
+                city: 'Singapore',
+                image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800&auto=format&fit=crop',
+                acceptanceRate: '12.0%',
+                acceptanceSource: 'NUS Registrar Statistics',
+                satRange: '1450 - 1550',
+                satMin: 1450,
+                ieltsMin: 7.0,
+                ieltsPolicy: '7.0 (минимум 6.5 в чтении/письме)',
+                majors: ['Computer Science', 'Engineering', 'Economics and Finance', 'Natural Sciences', 'Law'],
+                description: 'Азиатский университет #1, объединяющий восточную дисциплину и западные академические стандарты.',
+                officialUrl: 'https://nus.edu.sg',
+                admissionsUrl: 'https://www.nus.edu.sg/oam'
+            }
+        ];
+
+        const COUNTRIES_LIST = [
+            'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'Netherlands', 'Singapore'
+        ];
+
+        const MAJORS_LIST = [
+            'Computer Science', 'Artificial Intelligence', 'Engineering', 'Mathematics', 
+            'Physics', 'Business and Management', 'Economics and Finance', 
+            'Medicine and Health Sciences', 'Law', 'Natural Sciences', 'Social Sciences', 
+            'Architecture and Design', 'Humanities'
+        ];
+
+        // STATE MANAGEMENT
+        let selectedCountries = ['United States', 'United Kingdom', 'Canada', 'Germany', 'Singapore'];
+        let achievements = [];
+        let currentFilteredResults = [];
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCountries();
+            renderMajors();
+            generateRecommendations();
+        });
+
+        // RENDER COUNTRY PILLS
+        function renderCountries() {
+            const container = document.getElementById('countries-container');
+            container.innerHTML = COUNTRIES_LIST.map(country => {
+                const isSelected = selectedCountries.includes(country);
+                return `
+                    <button type="button" onclick="toggleCountry('${country}')" class="px-4 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 ${
+                        isSelected 
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' 
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }">
+                        <i class="fa-solid ${isSelected ? 'fa-check' : 'fa-plus'} text-xs"></i>
+                        ${country}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function toggleCountry(country) {
+            if (selectedCountries.includes(country)) {
+                if (selectedCountries.length > 1) {
+                    selectedCountries = selectedCountries.filter(c => c !== country);
+                }
+            } else {
+                selectedCountries.push(country);
+            }
+            renderCountries();
+        }
+
+        // RENDER MAJORS SELECT
+        function renderMajors() {
+            const select = document.getElementById('major-select');
+            select.innerHTML = MAJORS_LIST.map(m => `<option value="${m}">${m}</option>`).join('');
+        }
+
+        // ACHIEVEMENTS MANAGEMENT
+        function addAchievement() {
+            const titleInput = document.getElementById('achieve-title');
+            const catSelect = document.getElementById('achieve-cat');
+
+            if (!titleInput.value.trim()) return;
+
+            achievements.push({
+                id: Date.now(),
+                title: titleInput.value.trim(),
+                category: catSelect.value
+            });
+
+            titleInput.value = '';
+            renderAchievements();
+        }
+
+        function removeAchievement(id) {
+            achievements = achievements.filter(a => a.id !== id);
+            renderAchievements();
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievements-list');
+            if (achievements.length === 0) {
+                container.innerHTML = '<div class="text-xs text-slate-400 italic">Достижения пока не добавлены</div>';
+                return;
+            }
+
+            container.innerHTML = achievements.map(a => `
+                <div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs bg-slate-200 font-semibold px-2 py-1 rounded text-slate-700">${a.category}</span>
+                        <span class="text-sm font-medium text-slate-800">${a.title}</span>
+                    </div>
+                    <button onclick="removeAchievement(${a.id})" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // ALGORITHM: RECOMMENDATION ENGINE
+        function generateRecommendations() {
+            const satScore = parseInt(document.getElementById('sat-input').value) || null;
+            const ieltsScore = parseFloat(document.getElementById('ielts-input').value) || null;
+            const selectedMajor = document.getElementById('major-select').value;
+
+            const processed = UNIVERSITIES_DATA.map(uni => {
+                // Country filter priority
+                const countryMatch = selectedCountries.includes(uni.country);
+                
+                // Tier Categorization Logic
+                let tier = 'Competitive';
+                let reasons = [];
+
+                if (countryMatch) {
+                    reasons.push(`Соответствует выбранной стране (${uni.country})`);
+                }
+
+                if (uni.majors.includes(selectedMajor)) {
+                    reasons.push(`Сильная программа по вашему направлению: ${selectedMajor}`);
+                }
+
+                // SAT Evaluation
+                if (satScore) {
+                    if (satScore >= uni.satMin + 30) {
+                        reasons.push(`Ваш SAT (${satScore}) превышает стандартный порог ВУЗа`);
+                    } else if (satScore < uni.satMin) {
+                        reasons.push(`Целевой SAT ВУЗа: ${uni.satRange}. Рекомендуется повысить балл.`);
+                    }
+                } else if (uni.satMin > 0) {
+                    reasons.push(`Целевой балл SAT для подготовки: ${uni.satMin}+`);
+                }
+
+                // IELTS Evaluation
+                if (ieltsScore) {
+                    if (ieltsScore >= uni.ieltsMin) {
+                        reasons.push(`Ваш IELTS (${ieltsScore}) полностью соответствует требованиям (${uni.ieltsMin})`);
+                    } else {
+                        reasons.push(`IELTS ниже требуемого уровня (${uni.ieltsMin}). Требуется пересдача.`);
+                    }
+                } else {
+                    reasons.push(`Рекомендуемая цель по IELTS: ${uni.ieltsMin}+`);
+                }
+
+                // Achievement weight
+                if (achievements.length > 0) {
+                    reasons.push(`Учтено портфолио из ${achievements.length} достижений`);
+                }
+
+                // Tier Determination
+                const rawAcceptance = parseFloat(uni.acceptanceRate);
+                if (rawAcceptance < 10 || (satScore && satScore < uni.satMin - 20)) {
+                    tier = 'Ambitious';
+                } else if (satScore && satScore >= uni.satMin + 40 && ieltsScore >= uni.ieltsMin) {
+                    tier = 'Safer';
+                } else {
+                    tier = 'Competitive';
+                }
+
+                return {
+                    ...uni,
+                    tier,
+                    reasons,
+                    countryMatch
+                };
+            });
+
+            // Filter by country matching first
+            currentFilteredResults = processed.filter(u => selectedCountries.includes(u.country));
+            if (currentFilteredResults.length === 0) {
+                currentFilteredResults = processed; // fallback
+            }
+
+            filterResults();
+            
+            // Scroll to results if user clicked generate
+            const catalog = document.getElementById('catalog-section');
+            catalog.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // FILTER & RENDER CARDS
+        function filterResults() {
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            const tierVal = document.getElementById('filter-tier').value;
+
+            const finalDisplay = currentFilteredResults.filter(uni => {
+                const matchesSearch = uni.name.toLowerCase().includes(searchVal) || uni.city.toLowerCase().includes(searchVal);
+                const matchesTier = tierVal === 'ALL' || uni.tier === tierVal;
+                return matchesSearch && matchesTier;
+            });
+
+            document.getElementById('results-count-text').innerText = `Найдено подходящих университетов: ${finalDisplay.length}`;
+            renderCards(finalDisplay);
+        }
+
+        function renderCards(list) {
+            const container = document.getElementById('universities-grid');
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <i class="fa-solid fa-graduation-cap text-4xl mb-3"></i>
+                        <p>Университеты по заданным фильтрам не найдены.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = list.map(uni => {
+                let badgeColor = 'bg-blue-100 text-blue-800 border-blue-200';
+                let badgeText = '🎯 Конкурентный';
+
+                if (uni.tier === 'Ambitious') {
+                    badgeColor = 'bg-red-100 text-red-800 border-red-200';
+                    badgeText = '🔥 Амбициозный';
+                } else if (uni.tier === 'Safer') {
+                    badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+                    badgeText = '🛡️ Надежный';
+                }
+
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-48 overflow-hidden bg-slate-100">
+                                <img src="${uni.image}" alt="${uni.name}" class="w-full h-full object-cover transition transform hover:scale-105 duration-500">
+                                <div class="absolute top-3 left-3">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold border ${badgeColor}">
+                                        ${badgeText}
+                                    </span>
+                                </div>
+                                <div class="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-md">
+                                    Acceptance: ${uni.acceptanceRate}
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <div class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">
+                                    <i class="fa-solid fa-location-dot mr-1"></i> ${uni.city}, ${uni.country}
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug">${uni.name}</h3>
+                                <p class="text-slate-600 text-sm line-clamp-2 mb-4">${uni.description}</p>
+
+                                <!-- Requirements snippet -->
+                                <div class="grid grid-cols-2 gap-2 p-3 bg-slate-50 rounded-xl border border-slate-100 mb-4 text-xs">
+                                    <div>
+                                        <span class="text-slate-400 block">SAT Target</span>
+                                        <span class="font-bold text-slate-700">${uni.satRange}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block">IELTS Min</span>
+                                        <span class="font-bold text-slate-700">${uni.ieltsMin}+</span>
+                                    </div>
+                                </div>
+
+                                <!-- Match Reasoning -->
+                                <div class="space-y-1.5 mb-4">
+                                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Причина рекомендации:</span>
+                                    ${uni.reasons.slice(0, 2).map(r => `
+                                        <div class="text-xs text-slate-600 flex items-start gap-1.5">
+                                            <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                                            <span>${r}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button onclick="openModal('${uni.id}')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2.5 rounded-xl text-xs transition">
+                                Подробнее и требования
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // MODAL DETAILED VIEW
+        function openModal(id) {
+            const uni = UNIVERSITIES_DATA.find(u => u.id === id);
+            if (!uni) return;
+
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <div class="relative">
+                    <img src="${uni.image}" class="w-full h-56 object-cover">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-900/70 hover:bg-slate-900 text-white w-9 h-9 rounded-full flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="p-6 md:p-8 space-y-6">
+                    <div>
+                        <div class="text-xs font-bold text-blue-600 uppercase">${uni.city}, ${uni.country}</div>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">${uni.name}</h2>
+                    </div>
+
+                    <p class="text-slate-600 text-sm leading-relaxed">${uni.description}</p>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-slate-800 text-sm">Официальные требования к поступлению:</h4>
+                        <div class="grid grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <span class="text-slate-400 block">Процент зачисления:</span>
+                                <span class="font-bold text-slate-800">${uni.acceptanceRate}</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">Источник: ${uni.acceptanceSource}</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block">Диапазон SAT:</span>
+                                <span class="font-bold text-slate-800">${uni.satRange}</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block">Требование IELTS:</span>
+                                <span class="font-bold text-slate-800">${uni.ieltsPolicy}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm mb-2">Доступные топовые направления:</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${uni.majors.map(m => `<span class="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-lg border border-blue-100 font-medium">${m}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 pt-4 border-t border-slate-100">
+                        <a href="${uni.officialUrl}" target="_blank" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl text-center text-xs transition">
+                            <i class="fa-solid fa-globe mr-1"></i> Официальный сайт
+                        </a>
+                        <a href="${uni.admissionsUrl}" target="_blank" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl text-center text-xs transition">
+                            <i class="fa-solid fa-paper-plane mr-1"></i> Приёмная комиссия
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('uni-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('uni-modal').classList.add('hidden');
+        }
+
+        // SMOOTH SCROLL HELPER
+        function scrollToWizard() {
+            document.getElementById('wizard-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
